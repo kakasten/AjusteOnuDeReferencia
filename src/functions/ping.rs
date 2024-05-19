@@ -17,6 +17,6 @@ pub fn ping(ip: &String) -> Result<Output> {
     if output.status.success() {
         Ok(output)
     } else {
-        Err(io::Error::new(io::ErrorKind::Other, "Comando ping falhou"))
+        Err(io::Error::new(io::ErrorKind::Other, "Dispostivo não está pingando!"))
     }
 }
