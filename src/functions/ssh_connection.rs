@@ -20,6 +20,7 @@ pub fn ssh_connection(ip: &str, user: &str, password: &str, session: &mut Sessio
 }
 
 pub fn ssh_open_channel(session: &mut Session) -> Option<Channel> {
+    session.set_blocking(false);
     session.channel_session().ok()
 }
 
