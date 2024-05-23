@@ -3,7 +3,6 @@ mod constants;
 
 use std::io::{Read, Write};
 use std::time::Instant;
-
 use constants::TIME_OUT;
 
 pub struct Access {
@@ -11,22 +10,6 @@ pub struct Access {
 }
 
 impl Access {
-    pub fn channel_close(&mut self) {
-        if let Some(ref mut channel) = self.channel {
-            if let Err(e) = channel.send_eof() {
-                eprintln!("Falha ao enviar EOF: {:?}", e);
-            }
-            if let Err(e) = channel.wait_eof() {
-                eprintln!("Falha ao esperar por EOF: {:?}", e);
-            }
-            if let Err(e) = channel.wait_close() {
-                eprintln!("Falha ao fechar o canal: {:?}", e);
-            }
-            std::thread::sleep(TIME_OUT);
-            self.channel = None;
-        }
-    }
-
     pub fn channel_command(&mut self, command: &str) -> String {
         if let Some(ref mut channel) = self.channel {
             if let Err(e) = channel.write_all(command.as_bytes()) {
