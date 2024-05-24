@@ -26,7 +26,6 @@ impl Adjustment {
             "exit",
         ];
         let result_vec: Vec<String> = self.channel_conf.execute_commands(commands);
-        println!("{}", result_vec[2]);
         let hex_string: i32 = i32::from_str_radix(
             &result_vec[2]
                 .trim()
