@@ -14,6 +14,12 @@ Clone o projeto
   git clone https://github.com/kakasten/AjusteOnuDeReferencia
 ```
 
+Instale Rust e Cargo
+
+'''bash
+  curl https://sh.rustup.rs -sSf | sh
+'''
+
 Entre no diretório do projeto
 
 ```bash
