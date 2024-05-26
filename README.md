@@ -16,9 +16,9 @@ Clone o projeto
 
 Instale Rust e Cargo
 
-'''bash
+```bash
   curl https://sh.rustup.rs -sSf | sh
-'''
+```
 
 Entre no diretório do projeto
 
