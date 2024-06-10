@@ -52,24 +52,24 @@ impl Adjustment {
         let mut measured_value: f64 = read_float_from_keyboard();
 
         loop {
-            if measured_value > 2.2 {
+            if measured_value > constants::Max_REGISTER_VALUE {
                 loop {
                     let register_value: i32 = self.get_value_register();
-                    if measured_value > 2.2 {
+                    if measured_value > constants::Max_REGISTER_VALUE {
                         self.set_value_register(register_value - 4);
-                    } else if measured_value < 2.0 {
+                    } else if measured_value < constants::MIN_REGISTER_VALUE {
                         self.set_value_register(register_value + 1);
                     } else {
                         break;
                     }
                     measured_value = read_float_from_keyboard();
                 }
-            } else if measured_value < 2.0 {
+            } else if measured_value < constants::MIN_REGISTER_VALUE {
                 loop {
                     let register_value: i32 = self.get_value_register();
-                    if measured_value > 2.2 {
+                    if measured_value > constants::Max_REGISTER_VALUE {
                         self.set_value_register(register_value - 1);
-                    } else if measured_value < 2.0 {
+                    } else if measured_value < constants::MIN_REGISTER_VALUE {
                         self.set_value_register(register_value + 4);
                     } else {
                         break;
