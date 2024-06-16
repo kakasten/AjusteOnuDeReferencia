@@ -43,6 +43,7 @@ fn main() {
                                         let mut adjustment = Adjustment {
                                             ip: constants::IP.to_string(),
                                             channel_conf: channel_access,
+                                            session: session,
                                         };
                                         loop {
                                             adjustment.check_value();
