@@ -7,16 +7,18 @@ mod constants;
 use crate::access::Access;
 use clear_termianl::clear_terminal;
 use read_float_from_keyboard::read_float_from_keyboard;
+use ssh2::Session;
 
 pub struct Adjustment {
     pub ip: String,
     pub channel_conf: Access,
+    pub session: Session,
 }
 
 impl Adjustment {
     pub fn reboot(&mut self) {
         let commands: Vec<&str> = vec!["rtkbosa -b /etc/config/rtkbosa_k.bin", "reboot"];
-        self.channel_conf.execute_commands(commands);
+        self.channel_conf.execute_commands(commands, &mut self.session);
     }
 
     pub fn get_value_register(&mut self) -> i32 {
@@ -25,9 +27,9 @@ impl Adjustment {
             "i2c bosa_calibrate get dev 0x51 reg 0xa8 count 1",
             "exit",
         ];
-        let result_vec: Vec<String> = self.channel_conf.execute_commands(commands);
+        let result_vec: Vec<String> = self.channel_conf.execute_commands(commands, &mut self.session);
         let hex_string: i32 = i32::from_str_radix(
-            &result_vec[2]
+            &result_vec[0]
                 .trim()
                 .replace(" ", "")
                 .replace("RTK.0>", "")
@@ -45,20 +47,21 @@ impl Adjustment {
             value
         );
         let commands: Vec<&str> = vec!["diag", &command, "exit"];
-        self.channel_conf.execute_commands(commands);
+        self.channel_conf.execute_commands(commands, &mut self.session);
     }
 
     pub fn check_value(&mut self) {
         let mut measured_value: f64 = read_float_from_keyboard();
-
+        let mut  register_value: i32 = self.get_value_register();
         loop {
             if measured_value > constants::Max_REGISTER_VALUE {
                 loop {
-                    let register_value: i32 = self.get_value_register();
                     if measured_value > constants::Max_REGISTER_VALUE {
-                        self.set_value_register(register_value - 4);
+                        register_value -= 4;
+                        self.set_value_register(register_value);
                     } else if measured_value < constants::MIN_REGISTER_VALUE {
-                        self.set_value_register(register_value + 1);
+                        register_value += 1;
+                        self.set_value_register(register_value);
                     } else {
                         break;
                     }
@@ -66,11 +69,12 @@ impl Adjustment {
                 }
             } else if measured_value < constants::MIN_REGISTER_VALUE {
                 loop {
-                    let register_value: i32 = self.get_value_register();
                     if measured_value > constants::Max_REGISTER_VALUE {
-                        self.set_value_register(register_value - 1);
+                        register_value -= 1;
+                        self.set_value_register(register_value);
                     } else if measured_value < constants::MIN_REGISTER_VALUE {
-                        self.set_value_register(register_value + 4);
+                        register_value += 4;
+                        self.set_value_register(register_value);
                     } else {
                         break;
                     }
