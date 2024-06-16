@@ -28,16 +28,21 @@ impl Adjustment {
             "exit",
         ];
         let result_vec: Vec<String> = self.channel_conf.execute_commands(commands, &mut self.session);
-        let hex_string: i32 = i32::from_str_radix(
-            &result_vec[0]
-                .trim()
-                .replace(" ", "")
-                .replace("RTK.0>", "")
-                .replace("i2cbosa_calibrategetdev0x51reg0xa8count1", "")
-                .replace("\n", ""),
-            16,
-        )
-        .expect("Falha ao converter número hexadecimal para inteiro");
+
+        let hex_str = result_vec[0]
+            .trim()
+            .replace(" " , "")
+            .replace("RTK.0>", "")
+            .replace("i2cbosa_calibrategetdev0x51reg0xa8count1", "")
+            .replace("\n", "");
+    
+        let hex_string = match i32::from_str_radix(&hex_str, 16) {
+            Ok(value) => value,
+            Err(e) => {
+                eprintln!("Falha ao converter número hexadecimal para inteiro: {}", e);
+                -1
+            }
+        };
         hex_string
     }
 
@@ -56,7 +61,9 @@ impl Adjustment {
         loop {
             if measured_value > constants::Max_REGISTER_VALUE {
                 loop {
-                    if measured_value > constants::Max_REGISTER_VALUE {
+                    if register_value == -1 {
+                        eprint!("Erro ao resgatar valor de register_value");    
+                    }else if measured_value > constants::Max_REGISTER_VALUE {
                         register_value -= 4;
                         self.set_value_register(register_value);
                     } else if measured_value < constants::MIN_REGISTER_VALUE {
@@ -69,7 +76,9 @@ impl Adjustment {
                 }
             } else if measured_value < constants::MIN_REGISTER_VALUE {
                 loop {
-                    if measured_value > constants::Max_REGISTER_VALUE {
+                    if register_value == -1 {
+                        eprint!("Erro ao resgatar valor de register_value");    
+                    }else if measured_value > constants::Max_REGISTER_VALUE {
                         register_value -= 1;
                         self.set_value_register(register_value);
                     } else if measured_value < constants::MIN_REGISTER_VALUE {
