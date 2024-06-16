@@ -29,14 +29,14 @@ Para realizar o ajuste serão necessários os seguintes itens:
 
 Primeiramente deve-se medir a ONU de referência. Para isso, coloque o power meter na faixa de 1310 nm, depois conecte o lado azul do cordão de fibra no power meter e o lado verde na ONU que deseja medir. Se o valor estiver fora de 1,90 a 2,10 dBm, será necessário fazer ajuste na mesma.
 
-![Power meter](assets/PowerMeter.png)
-![conexão da fibra](assets/OnuDeReferencia.png)
+![Power meter](assets/PowerMeter.jpg)
+![conexão da fibra](assets/OnuDeReferencia.jpg)
 
 Imagem do power meter e conexões das fibras
 
 Para fazer o ajuste, conecte o cabo RJ-45 no computador ou notebook e depois na ONU de referência (como a ONU de referência segue o IP 192.168.1.1, você deve configurar a sua porta de rede para a mesma faixa).
 
-![RJ45](assets/RJ45.png)
+![RJ45](assets/RJ45.jpg)
 
 Depois, abra o nosso programa e siga o passo a passo descrito na tela (para abrir o programa, siga o passo "Rodando projeto").
 
