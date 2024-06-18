@@ -14,7 +14,7 @@ A ONU de referência é um equipamento usado para configuração, onde utilizamo
 
     Esse programa permite que qualquer pessoa consiga ajustar o valor da ONU de referência, algo que até então somente pessoas com formações técnicas poderiam fazer. Com este software, não será necessário a intervenção da manutenção, engenharia ou P&D.
 
-# Materiais necessario para o ajuste
+# Materiais necessário para o ajuste
 
 Para realizar o ajuste serão necessários os seguintes itens:
 
@@ -34,8 +34,6 @@ Primeiramente deve-se medir a ONU de referência. Para isso, coloque o power met
     <img src="assets/PowerMeter.jpg" alt="Imagem do power meter" width="200"/>
     <img src="assets/OnuDeReferencia.jpg" alt="Conexões das fibras" width="200"/>
 </div>
-
-Imagem do power meter e conexões das fibras
 
 Para fazer o ajuste, conecte o cabo RJ-45 no computador ou notebook e depois na ONU de referência (como a ONU de referência segue o IP 192.168.1.1, você deve configurar a sua porta de rede para a mesma faixa).
 
@@ -88,6 +86,7 @@ Inicie o .exe
 - ``Cargo 1.78``
 - ``Paradigma de orientação a objetos``
 - ``Librarie SSH2``
+- ``Librarie Log4rs``
 
 ## 📁 Acesso ao projeto
 Você pode acessar os arquivos do projeto clicando [aqui](https://github.com/kakasten/AjusteOnuDeReferencia/tree/master/src).
