@@ -7,5 +7,9 @@ description = "Programa para ajuste de onu"
 readme = "README.md"
 license-file = "LICENSE.txt"
 
+build = "build.rs"
+
 [dependencies]
 ssh2 = "^0.9"
+log = "0.4"
+log4rs = "1.2"

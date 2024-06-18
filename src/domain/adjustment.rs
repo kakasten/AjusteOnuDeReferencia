@@ -8,6 +8,7 @@ use crate::access::Access;
 use clear_termianl::clear_terminal;
 use read_float_from_keyboard::read_float_from_keyboard;
 use ssh2::Session;
+use log::{info, error};
 
 pub struct Adjustment {
     pub ip: String,
@@ -17,11 +18,13 @@ pub struct Adjustment {
 
 impl Adjustment {
     pub fn reboot(&mut self) {
+        info!("Reiniciando o dispositivo e salvando valor de registrador");
         let commands: Vec<&str> = vec!["rtkbosa -b /etc/config/rtkbosa_k.bin", "reboot"];
         self.channel_conf.execute_commands(commands, &mut self.session);
     }
 
     pub fn get_value_register(&mut self) -> i32 {
+        info!("Obtendo valor do registro");
         let commands: Vec<&str> = vec![
             "diag",
             "i2c bosa_calibrate get dev 0x51 reg 0xa8 count 1",
@@ -40,13 +43,16 @@ impl Adjustment {
             Ok(value) => value,
             Err(e) => {
                 eprintln!("Falha ao converter número hexadecimal para inteiro: {}", e);
+                error!("Falha ao converter número hexadecimal para inteiro: {}", e);
                 -1
             }
         };
+        info!("Valor do registro obtido: {}", hex_str);
         hex_string
     }
 
     pub fn set_value_register(&mut self, value: i32) {
+        info!("Configurando valor do registro para {}", value);
         let command = format!(
             "i2c bosa_calibrate set dev 0x51 reg 0xa8 count 1 data {:X}",
             value
@@ -56,6 +62,8 @@ impl Adjustment {
     }
 
     pub fn check_value(&mut self) {
+        info!("Verificando valor do registro");
+
         let mut measured_value: f64 = read_float_from_keyboard();
         let mut  register_value: i32 = self.get_value_register();
         loop {
@@ -96,6 +104,7 @@ impl Adjustment {
     }
 
     pub fn finalize_adjustment(&mut self) {
+        info!("Finalizando ajuste");
         clear_terminal();
         println!("Valor medido está na faixa!");
         println!("Aguarde reiniciar a onu!");
