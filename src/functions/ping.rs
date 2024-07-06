@@ -1,27 +1,41 @@
-use std::process::{Command, Output};
-use std::io::{self, Result};
+use std::process::Command;
 use log::{info, error};
 
-pub fn ping(ip: &String) -> Result<Output> {
+pub fn ping(ip: &str) -> Result<bool, String> {
     info!("Executando comando ping para o IP: {}", ip);
+
     let output = if cfg!(target_os = "windows") {
         Command::new("cmd")
             .args(&["/C", "ping", "-n", "2", ip])
-            .output()?
-    } else {
+            .output()
+            .map_err(|e| format!("Failed to execute command: {}", e))?
+    } else if cfg!(target_os = "linux") {
         Command::new("ping")
             .args(&["-c", "2", ip])
-            .output()?
+            .output()
+            .map_err(|e| format!("Failed to execute command: {}", e))?
+    } else {
+        let error_msg = "Sistema operacional não suportado!";
+        error!("{}", error_msg);
+        return Err(error_msg.to_string());
     };
 
     let output_str = String::from_utf8_lossy(&output.stdout);
 
-    if output.status.success() && output_str.contains("TTL=") {
+    let ping_success = if cfg!(target_os = "windows") {
+        output_str.contains("TTL=")
+    } else if cfg!(target_os = "linux") {
+        output_str.contains("ttl=")
+    } else {
+        false
+    };
+
+    if output.status.success() && ping_success {
         info!("Dispositivo está pingando com sucesso!");
-        Ok(output)
+        Ok(true)
     } else {
         let error_msg = "Dispositivo não está pingando!";
         error!("{}", error_msg);
-        Err(io::Error::new(io::ErrorKind::Other, error_msg))
+        Err(error_msg.to_string())
     }
 }
