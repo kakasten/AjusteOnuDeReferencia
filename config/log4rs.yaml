@@ -1,9 +1,9 @@
 appenders:
   file:
     kind: file
-    path: ""
+    path: "log.log"
     encoder:
-      pattern: "{d} - {l} - {m}{n}"
+      pattern: "{d(%Y-%m-%d %H:%M:%S)} - {l} - {m}{n}"
 
 root:
   level: info
