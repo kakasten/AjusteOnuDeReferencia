@@ -24,7 +24,8 @@ use log::{error, info};
 use ping::ping;
 use ssh2::Session;
 use ssh_connection::{ssh_connection, ssh_open_channel};
-use std::env;
+use core::time;
+use std::{env, thread::sleep};
 use user::User;
 
 fn main() {
@@ -34,7 +35,7 @@ fn main() {
 
     log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap();
 
-    'main: loop {
+    loop {
         let mut session = Session::new().expect("Falha ao criar sessão");
         let user: User = User {
             ip: constants::IP.to_string(),
@@ -95,12 +96,29 @@ fn main() {
         }
         println!("Digite 1 para poder ajustar outra ONU!");
         println!("Clique enter para fechar o programa e desligar a VM!");
-        let mut x = String::new();
-        std::io::stdin().read_line(&mut x).expect("Tudo ok");
-        if !(x == "1") {
-            info!("Codigo finalizado!");
-            info!("Desligando a VM");
-            shutdown::shutdown();
-        }
+        let mut input = String::new();
+        std::io::stdin()
+            .read_line(&mut input)
+            .expect("Falha ao ler a linha");
+
+        match input.replace("\n", "").parse::<i32>() {
+            Ok(n) => {
+                if n == 1 {
+                    info!("Reiniciando codigo!");
+                    println!("Recomeçando codigo!");
+                    sleep(time::Duration::from_secs(3));
+                } else {
+                    info!("Codigo finalizado!");
+                    info!("Desligando VM!");
+                    shutdown::shutdown();
+                    sleep(time::Duration::from_secs(1));
+                }
+            } Err(_e) => {
+                info!("Codigo finalizado!");
+                info!("Desligando VM!");
+                shutdown::shutdown();
+                sleep(time::Duration::from_secs(1));
+            }
+        }    
     }
 }

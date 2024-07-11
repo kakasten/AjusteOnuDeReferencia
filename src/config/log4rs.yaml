@@ -1,0 +1,11 @@
+appenders:
+  file:
+    kind: file
+    path: "log.log"
+    encoder:
+      pattern: "{d(%Y-%m-%d %H:%M:%S)} - {l} - {m}{n}"
+
+root:
+  level: info
+  appenders:
+    - file
