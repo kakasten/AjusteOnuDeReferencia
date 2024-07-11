@@ -119,7 +119,7 @@ fn main() {
                         println!("ELSE");    
                         info!("Codigo finalizado!");
                         info!("Desligando VM!");
-                        //shutdown::shutdown();
+                        shutdown::shutdown();
                         sleep(time::Duration::from_secs(1));
                     }
                 }
@@ -127,7 +127,7 @@ fn main() {
                     println!("ERRO {}", _e);
                     info!("Codigo finalizado!");
                     info!("Desligando VM!");
-                    //shutdown::shutdown();
+                    shutdown::shutdown();
                     sleep(time::Duration::from_secs(1));
                 }
             }
