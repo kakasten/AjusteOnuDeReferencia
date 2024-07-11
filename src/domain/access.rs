@@ -72,7 +72,7 @@ impl Access {
     }
 
     pub fn execute_commands(&mut self, commands: Vec<&str>, session: &mut Session) -> Vec<String> {
-        let mut results = Vec::new();
+        let mut results: Vec<String> = Vec::new();
         
         if let Some(ref mut channel) = self.channel {
             let _ = channel.shell();
