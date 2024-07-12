@@ -27,7 +27,8 @@ Para realizar o ajuste serão necessários os seguintes itens:
 
 ## Como fazer o ajuste
 
-Primeiramente deve-se medir a ONU de referência. Para isso, coloque o power meter na faixa de 1310 nm, depois conecte o lado azul do cordão de fibra no power meter e o lado verde na ONU que deseja medir. Se o valor estiver fora de 1,90 a 2,10 dBm, será necessário fazer ajuste na mesma.
+Primeiramente deve-se medir a ONU de referência. Para isso, coloque o power meter na faixa de 1310 nm, depois conecte o lado azul 
+do cordão de fibra no power meter e o lado verde na ONU que deseja medir. Se o valor estiver fora de 1,90 a 2,10 dBm, será necessário fazer ajuste na mesma.
 
 
 <div align="center">
@@ -73,10 +74,16 @@ Compile o projeto
   cargo build
 ```
 
-Inicie o .exe
+Inicie o codigo em modo PC
 
 ```bash
   cargo run
+  ```
+
+Inicie o codigo em modo VM
+
+```bash
+  cargo run vm_config
   ```
 
 ## ✔️ Técnicas e tecnologias utilizadas
@@ -87,6 +94,7 @@ Inicie o .exe
 - ``Paradigma de orientação a objetos``
 - ``Librarie SSH2``
 - ``Librarie Log4rs``
+- ``Command-Line Interface``
 
 ## 📁 Acesso ao projeto
 Você pode acessar os arquivos do projeto clicando [aqui](https://github.com/kakasten/AjusteOnuDeReferencia/tree/master/src).
