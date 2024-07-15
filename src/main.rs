@@ -4,7 +4,7 @@ mod access;
 mod adjustment;
 #[path = "functions/clear_terminal.rs"]
 mod clear_terminal;
-#[path = "config/config_args.rs"]
+#[path = "conf/config_args.rs"]
 mod config_args;
 #[path = "domain/constants.rs"]
 mod constants;
@@ -12,8 +12,6 @@ mod constants;
 mod is_ethernet_connected;
 #[path = "functions/ping.rs"]
 mod ping;
-#[path = "functions/shutdown.rs"]
-mod shutdown;
 #[path = "functions/ssh_connection.rs"]
 mod ssh_connection;
 #[path = "domain/user.rs"]
@@ -22,13 +20,12 @@ mod user;
 use access::Access;
 use adjustment::Adjustment;
 use config_args::ConfigArgs;
-use core::time;
 use is_ethernet_connected::is_ethernet_connected;
 use log::{error, info};
 use ping::ping;
 use ssh2::Session;
 use ssh_connection::{ssh_connection, ssh_open_channel};
-use std::{env, thread::sleep};
+use std::env;
 use user::User;
 
 fn main() {
@@ -37,9 +34,9 @@ fn main() {
 
     let mut config_path = env::current_exe().unwrap();
     config_path.pop();
-    config_path.push("src/config/log4rs.yaml");
+    config_path.push("config/log4rs.yaml");
 
-    log4rs::init_file("src/config/log4rs.yaml", Default::default()).unwrap();
+    log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap();
 
     loop {
         let mut session = Session::new().expect("Falha ao criar sessão");
@@ -81,6 +78,7 @@ fn main() {
                                                 session: session,
                                             };
                                             loop {
+                                                config.cell_selection();
                                                 adjustment.check_value();
                                                 adjustment.finalize_adjustment();
                                                 break 'start;
@@ -102,35 +100,7 @@ fn main() {
         }
 
         if config.get_config_mode() == "vm_config" {
-            println!("Digite 1 para poder ajustar outra ONU!");
-            println!("Clique enter para fechar o programa e desligar a VM!");
-            let mut input: String = String::new();
-            std::io::stdin()
-                .read_line(&mut input)
-                .expect("Falha ao ler a linha");
-
-            match input.trim().parse::<i32>() {
-                Ok(n) => {
-                    if n == 1 {
-                        info!("Reiniciando codigo!");
-                        println!("Recomeçando codigo!");
-                        sleep(time::Duration::from_secs(3));
-                    } else {
-                        println!("ELSE");    
-                        info!("Codigo finalizado!");
-                        info!("Desligando VM!");
-                        shutdown::shutdown();
-                        sleep(time::Duration::from_secs(1));
-                    }
-                }
-                Err(_e) => {
-                    println!("ERRO {}", _e);
-                    info!("Codigo finalizado!");
-                    info!("Desligando VM!");
-                    shutdown::shutdown();
-                    sleep(time::Duration::from_secs(1));
-                }
-            }
+            config.finalize_code();
         } else {
             println!("Clique enter para fechar o programa!");
             let mut input = String::new();
