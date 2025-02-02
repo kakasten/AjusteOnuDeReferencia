@@ -36,7 +36,12 @@ fn main() {
     config_path.pop();
     config_path.push("config/log4rs.yaml");
 
-    log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap();
+    if let Err(e) = log4rs::init_file(config_path.to_str().unwrap(), Default::default()) {
+        warn!("Falha ao carregar a configuração do log: {}", e);
+        println!("Falha ao carregar log: {}", e);
+    } else {
+        info!("Configuração de log carregada com sucesso.");
+    }
 
     loop {
         let mut session = Session::new().expect("Falha ao criar sessão");
